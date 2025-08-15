@@ -17,7 +17,6 @@ def landing_status(table_cells):
 def get_mass(table_cells):
     mass = unicodedata.normalize("NFKD", table_cells.text).strip()
     if mass:
-        mass.find("kg")
         new_mass = mass[0:mass.find("kg") + 2]
     else:
         new_mass = 0
@@ -31,7 +30,7 @@ def extract_column_from_header(row):
     if row.sup:
         row.sup.extract()
     column_name = ' '.join(row.contents)
-    if not(column_name.strip().isdigit()):
+    if not column_name.strip().isdigit():
         return column_name.strip()
 
 def main():
@@ -39,7 +38,7 @@ def main():
 
     html_data = requests.get(static_url)
     if html_data.status_code != 200:
-        print(f"Erro ao acessar a página: {html_data.status_code}")
+        print(f"erro ao acessar a página: {html_data.status_code}")
         return
 
     soup = BeautifulSoup(html_data.text, 'html5lib')
@@ -50,8 +49,6 @@ def main():
     headers = first_launch_table.find_all('th')
     column_names = [extract_column_from_header(h) for h in headers if extract_column_from_header(h)]
     print(column_names)
-
-    launch_dict = dict.fromkeys(column_names)
 
     launch_dict = {
         'Flight No.': [],
@@ -68,6 +65,7 @@ def main():
     }
 
     extracted_row = 0
+
     for table_number, table in enumerate(soup.find_all('table', "wikitable plainrowheaders collapsible")):
         for rows in table.find_all("tr"):
             if rows.th and rows.th.string and rows.th.string.strip().isdigit():
@@ -87,6 +85,8 @@ def main():
                 payload = row[3].a.string if row[3].a else ""
                 payload_mass = get_mass(row[4])
                 orbit = row[5].a.string if row[5].a else ""
+
+                # nem sempre o campo de customer é um link
                 try:
                     customer = row[6].a.string
                 except:
@@ -95,7 +95,7 @@ def main():
                 launch_outcome = list(row[7].strings)[0]
                 booster_landing = landing_status(row[8])
 
-                # Preenche o dicionário
+                # preenche os dados no dicionário
                 launch_dict['Flight No.'].append(flight_number)
                 launch_dict['Date'].append(date)
                 launch_dict['Time'].append(time)
