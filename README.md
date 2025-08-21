@@ -46,7 +46,7 @@ src/
 
 I started with a thorough exploratory data analysis (EDA), focusing on key features such as launch site, orbit type, booster version, and payload mass.
 
-In the geospatial analysis (Folium), I examined how close launch sites were to coastlines, cities, highways, and railways—important safety considerations for launch locations.
+In the geospatial analysis (Folium), I examined how close launch sites were to coastlines, cities, highways, and railways.
 
 ![Orbit Success](images/orbit_success.png)  
 ![Launch Sites Map](images/folium_map.png)
